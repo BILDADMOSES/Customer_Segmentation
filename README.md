@@ -34,28 +34,27 @@ To run this project on your local machine, follow these steps:
 
 Clone this repository to your local machine:
 
-bash
-Copy code
+```bash
 git clone https://github.com/your-username/customer-segmentation-ml.git
+```
 Create a virtual environment:
-
-Copy code
+```
 python -m venv venv
+```
 Activate the virtual environment:
-
 On Windows:
-
-Copy code
+```
 venv\Scripts\activate
+```
 On macOS and Linux:
-
-bash
-Copy code
+```
 source venv/bin/activate
+```
 Install the required dependencies:
 
-Copy code
+```
 pip install -r requirements.txt
+```
 Open the Jupyter Notebook or Python script to start working on the project.
 
 ### Data Preprocessing
@@ -69,7 +68,7 @@ Explore the dataset to gain insights into customer behavior and demographics. Vi
 Create meaningful features or representations of the data that can enhance the performance of the segmentation model.
 
 ### Model Training
-Select and train a machine learning model for customer segmentation. Experiment with different algorithms such as K-Means clustering, hierarchical clustering, or DBSCAN.
+Select and train a machine learning model for customer segmentation. Experiment with different algorithms such as K-Means clustering.
 
 ### Evaluation
 Evaluate the model's performance using appropriate metrics. Measure the quality of the customer segments created by the model.
