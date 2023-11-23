@@ -71,7 +71,10 @@ def create_table_from_csv(csv_file_path, table_name):
                         )
 
             table = sqlalchemy.Table(
-                table_name, db_connector.metadata, extend_existing=True, *schema_definition.values()
+                table_name,
+                db_connector.metadata,
+                extend_existing=True,
+                *schema_definition.values(),
             )
             table.create(bind=db_connector.engine, checkfirst=True)
 

@@ -69,9 +69,14 @@ async def upload_file(file: UploadFile = File(...)):
             ]
             missing_fields = check_required_fields("./data/data.csv", required_fields)
             if missing_fields:
-                raise HTTPException(status_code=400, detail=f"The following required fields are missing: {', '.join(missing_fields)}")
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"The following required fields are missing: {', '.join(missing_fields)}",
+                )
 
-            return JSONResponse(status_code=200, content={"message": "File uploaded successfully"})
+            return JSONResponse(
+                status_code=200, content={"message": "File uploaded successfully"}
+            )
         else:
             raise HTTPException(status_code=400, detail="Invalid file type")
     except Exception as e:
@@ -120,7 +125,8 @@ async def save_to_db():
     """
     try:
         create_table_from_csv("./data/data.csv", "customers")
-        return JSONResponse(status_code=200, content={"message": "Data saved to database successfully"})
+        return JSONResponse(
+            status_code=200, content={"message": "Data saved to database successfully"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
-
