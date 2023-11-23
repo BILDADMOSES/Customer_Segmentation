@@ -3,56 +3,85 @@ import sqlalchemy
 import argparse
 from sqlalchemy import inspect
 from utilities import convert_xls_to_csv, convert_headers
+from sqlalchemy import UniqueConstraint
+
 from db_connector import DatabaseConnector
 
+
 def is_integer(value):
+    """
+    This function checks if the given value can be converted to an integer.
+
+    Parameters:
+    value (str): The value to check.
+
+    Returns:
+    bool: True if the value can be converted to an integer, False otherwise.
+    """
     try:
         int(value)
         return True
     except ValueError:
         return False
 
+
 def create_table_from_csv(csv_file_path, table_name):
-    db_connector = DatabaseConnector()
+    """
+    This function creates a table in a database from a CSV file.
 
-    # Check if the table exists and drop it
-    inspector = inspect(db_connector.engine)
-    if inspector.has_table(table_name):
-        db_connector.metadata.reflect(bind=db_connector.engine)
-        db_connector.metadata.tables[table_name].drop()
+    Parameters:
+    csv_file_path (str): The path to the CSV file.
+    table_name (str): The name of the table to create.
 
-    with open(csv_file_path, "r") as csvfile:
-        reader = csv.DictReader(csvfile)
-        old_headers = reader.fieldnames
-        new_headers = convert_headers(old_headers)
-        data = list(reader)
+    Returns:
+    bool: True if the table was created successfully, False otherwise.
+    """
+    try:
+        db_connector = DatabaseConnector()
 
-        # Change headers in the data
-        for row in data:
-            for old_header, new_header in zip(old_headers, new_headers):
-                row[new_header] = row.pop(old_header, None)
+        inspector = inspect(db_connector.engine)
+        if inspector.has_table(table_name):
+            db_connector.metadata.reflect(bind=db_connector.engine)
+            db_connector.metadata.tables[table_name].drop(bind=db_connector.engine)
 
-        schema_definition = {}
+        with open(csv_file_path, "r") as csvfile:
+            reader = csv.DictReader(csvfile)
+            old_headers = reader.fieldnames
+            new_headers = old_headers
+            data = list(reader)
 
-        # Add custom column definition for the primary key 'ID'
-        schema_definition['ID'] = sqlalchemy.Column('ID', sqlalchemy.Integer, primary_key=True)
+            for row in data:
+                for old_header, new_header in zip(old_headers, new_headers):
+                    row[new_header] = row.pop(old_header, None)
 
-        # Define remaining columns based on data types
-        for header in new_headers:
-            if header != 'ID':
-                if any(map(str.isdigit, [row[header] for row in data])):
-                    schema_definition[header] = sqlalchemy.Column(header, sqlalchemy.Integer)
-                else:
-                    schema_definition[header] = sqlalchemy.Column(header, sqlalchemy.String(255))
+            schema_definition = {}
+            schema_definition["ID"] = sqlalchemy.Column(
+                "ID", sqlalchemy.Integer, primary_key=True
+            )
 
-        print("Schema Definition:", schema_definition)  # Debugging line
+            for header in new_headers:
+                if header != "ID":
+                    if any(map(str.isdigit, [row[header] for row in data])):
+                        schema_definition[header] = sqlalchemy.Column(
+                            header, sqlalchemy.Integer
+                        )
+                    else:
+                        schema_definition[header] = sqlalchemy.Column(
+                            header, sqlalchemy.String(255)
+                        )
 
-        # Create the table in the database
-        table = sqlalchemy.Table(table_name, db_connector.metadata, *schema_definition.values())
-        table.create(bind=db_connector.engine, checkfirst=True)
+            table = sqlalchemy.Table(
+                table_name, db_connector.metadata, extend_existing=True, *schema_definition.values()
+            )
+            table.create(bind=db_connector.engine, checkfirst=True)
 
-        # Insert data into the table
-        db_connector.insert_data(table, data)
+            db_connector.insert_data(table, data)
+            return True
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
+
 
 def main():
     parser = argparse.ArgumentParser(description="Csv Uploader")
@@ -70,6 +99,7 @@ def main():
         print("File is not a CSV or XLS")
         return
     create_table_from_csv(csv_file_path, args.table_name)
+
 
 if __name__ == "__main__":
     main()
