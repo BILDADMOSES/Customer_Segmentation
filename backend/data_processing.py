@@ -205,6 +205,53 @@ def preprocess_and_cluster(input_data_path):
     # Save the figure to an image file (e.g., PNG)
     plt.savefig("./results/cluster_distribution.png")
 
+    # Visualizing the Cluster Within Income and Spending
+    figure = sns.scatterplot(
+        data=df, x=df["Spent"], y=df["Income"], hue=df["Clusters"], palette="tab10"
+    )
+    figure.set_title("Clusters Within Income and Spending")
+    figure.legend()
+    # plt.show()
+
+    # Save the figure to an image file (e.g., PNG)
+    plt.savefig("./results/cluster_within_income_and_spending.png")
+
+    Personal = [
+        "No_of_Children",
+        "Customer_For (Days)",
+        "Cust_Age",
+        "Teenhome",
+        "Spent",
+        "Income",
+    ]
+
+    # Visualizing Distribution Among Clusters
+    # Create a 2x3 grid of subplots
+    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+
+    # Flatten the axes array to iterate through it
+    axes = axes.flatten()
+
+    # Loop through each feature and create a violin plot
+    for i, feature in enumerate(Personal):
+        figure = sns.violinplot(
+            x=df["Clusters"],
+            y=df[feature],
+            ax=axes[i],
+            hue=df["Clusters"],
+            palette="tab10",
+        )
+
+        figure.xaxis.set_major_locator(plt.MaxNLocator(20))
+        figure.yaxis.set_major_locator(plt.MaxNLocator(20))
+    # Adjust layout
+    plt.tight_layout()
+    plt.legend(loc="upper center")
+    # plt.show()
+
+    # Save the figure to an image file (e.g., PNG)
+    plt.savefig("./results/violin.png")
+
     # Define recommendation strategies based on clusters
     def recommend_products(cluster_label):
         if cluster_label == 0:
