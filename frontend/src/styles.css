@@ -1,0 +1,17 @@
+/* styles.css */
+/* You can customize these styles based on your branding */
+.dropzone {
+    border: 2px dashed #d2d6dc;
+    border-radius: 4px;
+    background-color: #f7fafc;
+    padding: 20px;
+    outline: none;
+    transition: border 0.24s ease-in-out;
+  }
+  
+  .dropzone.active {
+    border: 2px dashed #3182ce;
+  }
+  
+  /* Add more styles as needed */
+  
