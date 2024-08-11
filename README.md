@@ -27,9 +27,7 @@ Customer segmentation is the process of dividing a customer base into groups of 
 In this project, we use a publicly available dataset to create and evaluate a customer segmentation model. The process includes data preprocessing, exploratory data analysis, feature engineering, model training, and evaluation.
 
 ### Dataset
-The dataset used for this project is [insert dataset name or source]. It contains information about [describe the data fields, e.g., customer demographics, purchase history, and behavior]. The dataset can be obtained from [insert dataset source link].
-
-### Getting Started
+The dataset used for this project contains information about e.g., customer demographics, purchase history, tec.
 To run this project on your local machine, follow these steps:
 
 Clone this repository to your local machine:
